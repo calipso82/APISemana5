@@ -1,4 +1,4 @@
-version: '2.1'
+ersion: '2.1'
 orbs:
   node: circleci/node@5.1.0
 
@@ -9,16 +9,10 @@ defaults: &defaults
 
 prepare_venv: &prepare_venv
   run:
-    name: Create and activate venv
+    name: Create venv
     command: |
-      # Verifica si el entorno virtual ya existe, y si no, lo crea
-      if [ ! -d ~/project/venv ]; then
-        python3 -m venv ~/project/venv
-        echo "Entorno virtual creado"
-      else
-        echo "El entorno virtual ya existe"
-      fi
-      source ~/project/venv/bin/activate
+      python -m venv venv
+      source venv/bin/activate
       pip install --upgrade pip
 
 jobs:
@@ -30,22 +24,24 @@ jobs:
       - node/install:
           node-version: '20.9'
       - run: node --version
-      - run:
-          name: Setup Railway CLI
-          command: |
-            source ~/project/venv/bin/activate  # Activa el entorno virtual antes de instalar
-            pip install railway
+      - run: npm i -g @railway/cli
       - run:
           name: Deploy to Railway App
           command: |
-            source ~/project/venv/bin/activate  # Activa el entorno virtual antes de desplegar
             cd bankchurn-api 
-            railway login --token $RAILWAY_TOKEN
-            railway up --service=NombreDelServicio
+            railway up --service=celebrated-wonder
             railway up --detach
 
+
+tags_only: &tags_only
+  filters:
+    branches:
+      ignore: /.*/
+    tags:
+      only: /^.*/
+
 workflows:
-  version: 2
+  version: 1
   deploy_pipeline:
     jobs:
       - deploy_app_to_railway:
