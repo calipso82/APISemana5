@@ -30,8 +30,7 @@ jobs:
           name: Deploy to Railway App
           command: |
             cd bankchurn-api
-            railway up --service=celebrated-wonder  # Asegúrate de usar tu nombre de servicio real
-            railway up --detach
+            railway up --service=celebrated-wonder --detach
 
 workflows:
   version: 2
