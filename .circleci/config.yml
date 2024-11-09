@@ -1,4 +1,4 @@
-version: '2.1'
+ersion: '2.1'
 orbs:
   node: circleci/node@5.1.0
 
@@ -9,7 +9,7 @@ defaults: &defaults
 
 prepare_venv: &prepare_venv
   run:
-    name: Create and activate venv
+    name: Create venv
     command: |
       python -m venv venv
       source venv/bin/activate
@@ -21,21 +21,27 @@ jobs:
     steps:
       - checkout:
           path: ~/project/
-      - run:
-          name: Install Railway CLI
-          command: |
-            source venv/bin/activate
-            pip install railway
+      - node/install:
+          node-version: '20.9'
+      - run: node --version
+      - run: npm i -g @railway/cli
       - run:
           name: Deploy to Railway App
           command: |
-            source venv/bin/activate
-            cd bankchurn-api
-            railway login --ci
-            railway up --detach --service=**nombre-real-del-servicio**
+            cd bankchurn-api 
+            railway up --service=NombreDelServicio
+            railway up --detach
+
+
+tags_only: &tags_only
+  filters:
+    branches:
+      ignore: /.*/
+    tags:
+      only: /^.*/
 
 workflows:
-  version: 2
+  version: 1
   deploy_pipeline:
     jobs:
       - deploy_app_to_railway:
