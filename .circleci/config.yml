@@ -1,4 +1,5 @@
-ersion: '2.1'
+version: '2.1'
+
 orbs:
   node: circleci/node@5.1.0
 
@@ -11,7 +12,7 @@ prepare_venv: &prepare_venv
   run:
     name: Create venv
     command: |
-      python -m venv venv
+      python3 -m venv venv
       source venv/bin/activate
       pip install --upgrade pip
 
@@ -28,20 +29,12 @@ jobs:
       - run:
           name: Deploy to Railway App
           command: |
-            cd bankchurn-api 
-            railway up --service=celebrated-wonder
+            cd bankchurn-api
+            railway up --service=celebrated-wonder  # Asegúrate de usar tu nombre de servicio real
             railway up --detach
 
-
-tags_only: &tags_only
-  filters:
-    branches:
-      ignore: /.*/
-    tags:
-      only: /^.*/
-
 workflows:
-  version: 1
+  version: 2
   deploy_pipeline:
     jobs:
       - deploy_app_to_railway:
