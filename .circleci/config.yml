@@ -11,7 +11,13 @@ prepare_venv: &prepare_venv
   run:
     name: Create and activate venv
     command: |
-      python3 -m venv ~/project/venv  # Asegúrate de que se cree en la raíz del proyecto
+      # Verifica si el entorno virtual ya existe, y si no, lo crea
+      if [ ! -d ~/project/venv ]; then
+        python3 -m venv ~/project/venv
+        echo "Entorno virtual creado"
+      else
+        echo "El entorno virtual ya existe"
+      fi
       source ~/project/venv/bin/activate
       pip install --upgrade pip
 
