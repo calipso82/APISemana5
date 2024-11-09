@@ -11,8 +11,8 @@ prepare_venv: &prepare_venv
   run:
     name: Create and activate venv
     command: |
-      python3 -m venv venv
-      source venv/bin/activate
+      python3 -m venv ~/project/venv  # Asegúrate de que se cree en la raíz del proyecto
+      source ~/project/venv/bin/activate
       pip install --upgrade pip
 
 jobs:
@@ -27,12 +27,12 @@ jobs:
       - run:
           name: Setup Railway CLI
           command: |
-            source venv/bin/activate
+            source ~/project/venv/bin/activate  # Activa el entorno virtual antes de instalar
             pip install railway
       - run:
           name: Deploy to Railway App
           command: |
-            source venv/bin/activate
+            source ~/project/venv/bin/activate  # Activa el entorno virtual antes de desplegar
             cd bankchurn-api 
             railway login --token $RAILWAY_TOKEN
             railway up --service=NombreDelServicio
